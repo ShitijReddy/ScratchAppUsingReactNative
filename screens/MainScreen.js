@@ -33,7 +33,7 @@ const MainScreen = ({ navigation }) => {
   const processQueue = async () => {
     let repeatStartIndex = -1;
     let repeatCount = 0;
-    let maxRepeatCount = 3; // Set the maximum number of repeats
+    let maxRepeatCount = 3;
 
     for (let i = 0; i < actionQueue.current.length; i++) {
       const action = actionQueue.current[i];
@@ -46,7 +46,7 @@ const MainScreen = ({ navigation }) => {
             };
             setTimeout(() => {
               resolve(newPosition);
-            }, 500); // Slight delay to ensure smooth transitions
+            }, 500);
             return newPosition;
           });
         } else if (action.type === "ROTATE") {
@@ -54,7 +54,7 @@ const MainScreen = ({ navigation }) => {
             const newRotation = prevRotation + action.payload.degrees;
             setTimeout(() => {
               resolve(newRotation);
-            }, 500); // Slight delay to ensure smooth transitions
+            }, 500);
             return newRotation;
           });
         } else if (action.type === "SAY_HELLO") {
@@ -65,13 +65,13 @@ const MainScreen = ({ navigation }) => {
           setTimeout(() => {
             setShowHello(false);
             resolve();
-          }, 2000); // Display the message for 2 seconds
+          }, 2000);
         } else if (action.type === "THINK_HMM_TIMER") {
           setShowThink(true);
           setTimeout(() => {
             setShowThink(false);
             resolve();
-          }, 2000); // Display the message for 2 seconds
+          }, 2000);
         } else if (action.type === "THINK_HMM") {
           setShowThink(true);
           resolve();
@@ -86,23 +86,14 @@ const MainScreen = ({ navigation }) => {
             resolve();
           }, 2000);
         } else if (action.type === "REPEAT") {
-          // if (repeatStartIndex === -1) {
-          //   repeatStartIndex = 0; // Mark the beginning of the queue for repeating
-          // }
-
           repeatCount++;
 
           if (repeatCount < maxRepeatCount) {
-            // Push actions back into the queue from the start index
             console.log("repeatCount:", repeatCount);
             console.log("repeatStartInd:", repeatStartIndex);
             console.log("ACTION QUE--", actionQueue);
             i = -1;
             console.log("i:", i);
-            // actionQueue.current.push(
-            //   ...actionQueue.current.slice(repeatStartIndex, i)
-            // );
-            // actionQueue.current.push(action); // Add the REPEAT action itself
             resolve();
           } else {
             resolve();
@@ -110,7 +101,7 @@ const MainScreen = ({ navigation }) => {
         }
       });
     }
-    actionQueue.current = []; // Clear queue after processing
+    actionQueue.current = [];
     setPlayOn(false);
   };
 
@@ -120,7 +111,7 @@ const MainScreen = ({ navigation }) => {
   };
 
   const handlePlay = () => {
-    actionQueue.current = []; // Reset queue
+    actionQueue.current = [];
     console.log("scripts:", scripts);
     Object.values(scripts).forEach((script) => {
       if (script.type === "Motion" && script.label === "Move 30 steps") {
@@ -206,7 +197,7 @@ const MainScreen = ({ navigation }) => {
         });
       }
     });
-    setPlayOn(true); // Trigger processing of the queue
+    setPlayOn(true);
   };
 
   useEffect(() => {
@@ -216,12 +207,12 @@ const MainScreen = ({ navigation }) => {
   });
 
   const handleReset = () => {
-    setPlayOn(false); // Stop any ongoing play
-    actionQueue.current = []; // Clear the action queue
-    setSpritePosition({ x: 0, y: 0 }); // Reset sprite position
-    setSpriteRotation(0); // Reset sprite rotation
-    setShowHello(false); // Hide any "Hello" message
-    setShowThink(false); // Hide any "Think" message
+    setPlayOn(false);
+    actionQueue.current = [];
+    setSpritePosition({ x: 0, y: 0 });
+    setSpriteRotation(0);
+    setShowHello(false);
+    setShowThink(false);
     setHide(false);
   };
 
@@ -252,7 +243,6 @@ const MainScreen = ({ navigation }) => {
         <SpritePositionPanel position={spritePosition} />
         <SpritePane onSelectSprite={handleSpriteSelect} />
       </View>
-      {/* <Button title="Play" onPress={handlePlay} /> */}
     </View>
   );
 };
@@ -283,7 +273,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 20,
     right: 20,
-    backgroundColor: "#F44336", // A red color to indicate reset
+    backgroundColor: "#F44336",
     borderRadius: 50,
     width: 35,
     height: 35,

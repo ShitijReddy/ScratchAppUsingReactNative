@@ -1,4 +1,3 @@
-// components/SpritePositionPanel.js
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -22,7 +21,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     padding: 0,
-    // paddingTop: -10,
     maxHeight: 60,
     backgroundColor: "#fff",
     borderColor: "#ccc",
@@ -33,7 +31,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    // borderWidth: 1,
   },
 });
 

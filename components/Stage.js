@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { CatIcon } from "./svgIcons";
-// import FontAwesomeIcon
 const Stage = ({
   spritePosition,
   setSpritePosition,
@@ -60,11 +59,6 @@ const Stage = ({
       useNativeDriver: false,
     }).start();
     console.log("rotation:", rotation);
-
-    // if (playOn) {
-    //   // animateScripts();
-    //   setPlayOn(false);
-    // }
   }, [playOn, spritePosition]);
 
   const animateScripts = () => {
@@ -135,37 +129,17 @@ const Stage = ({
               style={[
                 styles.messageContainer,
                 {
-                  // width: 50,
                   borderWidth: 1,
                   marginTop: -30,
-                  // marginRight: -60,
-
-                  // top: spritePosition.y - 10, // Adjust position
-                  // left: spritePosition.x + 10, // Center message horizontally
                 },
               ]}
-              // onLayout={(event) => {
-              //   const { width, height } = event.nativeEvent.layout;
-              //   setMessageDimensions({ width, height });
-              // }}
             >
               <Text style={styles.messageText}>Hello!</Text>
-              {/* <View style={styles.pointer} /> */}
-              {/* <FontAwesomeIcon icon="fa-thin fa-cloud" /> */}
             </View>
           )}
           {showThink && (
             <View
-              style={[
-                styles.cloudContainer,
-                {
-                  // borderWidth: 1,
-                  // marginTop: -40,
-                  // marginRight: -60,
-                  // top: spritePosition.y - 10, // Adjust position
-                  // left: spritePosition.x + 10, // Center message horizontally
-                },
-              ]}
+              style={[styles.cloudContainer]}
               onLayout={(event) => {
                 const { width, height } = event.nativeEvent.layout;
                 setMessageDimensions({ width, height });
@@ -182,34 +156,12 @@ const Stage = ({
                   marginBottom: -20,
                   marginRight: -25,
                   marginLeft: 5,
-                  // zIndex: 1,
                   fontSize: 10,
                 }}
               >
                 Hmm...
               </Text>
-              {/* <View style={styles.pointer} /> */}
-              {/* <FontAwesomeIcon icon="fa-thin fa-cloud" /> */}
             </View>
-            // <View style={styles.cloudContainer}>
-            //   <Text
-            //   style={{
-            //     position: "absolute",
-            //     marginTop: 20,
-            //     marginBottom: -20,
-            //     marginRight: -25,
-            //     marginLeft: 15,
-            //     zIndex: 10,
-            //     fontSize: 10,
-            //   }}
-            // >
-            //     Hmm...
-            //   </Text>
-            //   <Image
-            //     style={styles.cloud}
-            //     source={require("../assets/cloud-messaging.png")}
-            //   />
-            // </View>
           )}
 
           <SvgXml
@@ -239,22 +191,16 @@ const styles = StyleSheet.create({
   sprite: {
     position: "absolute",
   },
-  // messageContainer: {
-  //   position: "absolute",
-  //   alignItems: "center",
-  //   fontSize: 10,
-  //   zIndex: 1,
-  // },
   messageContainer: {
     position: "absolute",
     alignItems: "center",
     backgroundColor: "white",
     marginLeft: 45,
-    padding: 2, // Padding inside the box
-    borderRadius: 5, // Rounded corners
-    borderWidth: 1, // Border around the box
-    borderColor: "black", // Border color
-    zIndex: 99, // Ensure it appears above other elements
+    padding: 2,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "black",
+    zIndex: 99,
     width: 70,
   },
   messageText: {
@@ -268,15 +214,11 @@ const styles = StyleSheet.create({
     width: 55,
     height: 55,
     marginLeft: -10,
-    // marginTop:
   },
   cloudContainer: {
     position: "absolute",
     marginTop: -50,
-    // borderWidth: 1,
     marginLeft: -10,
-    // marginBottom: -10,
-    // backgroundColor: "white",
   },
 });
 

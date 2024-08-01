@@ -3,7 +3,6 @@ import "./CatSprite.css";
 
 export default function CatSprite({ charac_id }) {
   return (
-    // Sprite Component
     <div id={charac_id} className="character inline-block z-0">
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -1,13 +1,10 @@
-// components/Block.js
 import React from "react";
 import { PanResponder, StyleSheet, Text, View } from "react-native";
 
 const Block = ({ type, label, onDragEnd }) => {
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: (_, gestureState) => {
-      // Implement drag logic here if needed
-    },
+    onPanResponderMove: (_, gestureState) => {},
     onPanResponderRelease: (_, gestureState) => {
       onDragEnd(type, label, gestureState.moveX, gestureState.moveY);
     },

@@ -1,4 +1,3 @@
-// components/BlockPalette.js
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import Block from "./Block";
@@ -9,7 +8,6 @@ const BlockPalette = ({ onBlockDrop }) => {
 
   return (
     <ScrollView style={styles.palette}>
-      {/* <Text style={styles.heading}>CODES</Text> */}
       <Block type="Motion" label="Move 30 steps" onDragEnd={handleDragEnd} />
       <Block type="Motion" label="Change X by 30" onDragEnd={handleDragEnd} />
       <Block type="Motion" label="Change Y by 30" onDragEnd={handleDragEnd} />
@@ -33,12 +31,7 @@ const BlockPalette = ({ onBlockDrop }) => {
         label="Rotate by -45 deg"
         onDragEnd={handleDragEnd}
       />
-      {/* <Block
-        type="Motion"
-        label="Rotate by 360 deg"
-        onDragEnd={handleDragEnd}
-      /> */}
-      {/* <Text style={styles.heading}>Looks</Text> */}
+
       <Block type="Looks" label="Say Hello" onDragEnd={handleDragEnd} />
       <Block type="Looks" label="Think Hmm" onDragEnd={handleDragEnd} />
       <Block
@@ -53,7 +46,6 @@ const BlockPalette = ({ onBlockDrop }) => {
       />
       <Block type="Looks" label="Hide" onDragEnd={handleDragEnd} />
       <Block type="Looks" label="Show" onDragEnd={handleDragEnd} />
-      {/* <Text style={styles.heading}>Control</Text> */}
       <Block type="Control" label="Wait 2 seconds" onDragEnd={handleDragEnd} />
       <Block type="Control" label="Repeat 3 times" onDragEnd={handleDragEnd} />
       <Block type="Events" label="When Clicked" onDragEnd={handleDragEnd} />
@@ -69,7 +61,6 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 5,
-    // paddingBottom: 50,
     paddingRight: 20,
   },
   heading: {

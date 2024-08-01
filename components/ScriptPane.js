@@ -1,4 +1,3 @@
-// components/SpritePane.js
 import React, { useState } from "react";
 import { Button, FlatList, StyleSheet, Text, View } from "react-native";
 

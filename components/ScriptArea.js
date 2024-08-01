@@ -3,8 +3,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const ScriptArea = ({ scripts, onDelete }) => {
-  // const [currentScripts, setCurrentScripts] = useState({});
-
   return (
     <View style={styles.scriptArea}>
       {Object.keys(scripts).map((key) => (
@@ -47,7 +45,7 @@ const styles = StyleSheet.create({
     marginLeft: 2,
     padding: 5,
     borderRadius: 20,
-    backgroundColor: "#F44336", // Red color for delete
+    backgroundColor: "#F44336",
   },
 });
 
