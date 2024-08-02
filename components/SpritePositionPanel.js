@@ -1,15 +1,27 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
-const SpritePositionPanel = ({ position }) => {
+const SpritePositionPanel = ({ position, sprites }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
-        X: {(Math.round(position.x * 100) / 100).toFixed(5)}
-      </Text>
-      <Text style={styles.text}>
-        Y: {(Math.round(position.y * 100) / 100).toFixed(5)}
-      </Text>
+      <FlatList
+        // alignItems="center"
+        justifyContent="space-between"
+        style={styles.list}
+        horizontal
+        data={sprites}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item, index }) => (
+          <View style={styles.spriteItem}>
+            <Text style={styles.text}>
+              X: {(Math.round(item.position["x"] * 100) / 100).toFixed(2)}
+            </Text>
+            <Text>
+              Y: {(Math.round(item.position["y"] * 100) / 100).toFixed(2)}
+            </Text>
+          </View>
+        )}
+      />
     </View>
   );
 };
@@ -18,19 +30,42 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
     alignItems: "center",
     padding: 0,
     maxHeight: 60,
     backgroundColor: "#fff",
-    borderColor: "#ccc",
-    borderWidth: 3,
+    // borderColor: "#ccc",
+    // borderWidth: 3,
     borderRadius: 5,
     marginLeft: 10,
     marginRight: 10,
   },
+  list: {
+    // flex: 1,
+    // display: "flex",
+    // justifyContent: "space-around",
+  },
   text: {
-    fontSize: 16,
+    // marginRight: 5,
+    // fontSize: 16,
+  },
+  // container: {
+  //   flex: 1,
+  //   padding: 10,
+  //   backgroundColor: "#e0e0e0",
+  // },
+  spriteItem: {
+    display: "flex",
+    // flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    // margin: 5,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    alignItems: "center",
+    width: 100,
   },
 });
 

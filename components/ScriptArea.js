@@ -1,21 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const ScriptArea = ({ scripts, onDelete }) => {
+const ScriptArea = ({
+  scripts,
+  onDelete,
+  sprites,
+  selectedSpriteIndex,
+  route,
+}) => {
+  useEffect(() => {
+    console.log("SSS:", sprites);
+    if (
+      selectedSpriteIndex !== null &&
+      sprites[selectedSpriteIndex] &&
+      sprites[selectedSpriteIndex].length > 0
+    ) {
+      console.log("WWW", sprites[selectedSpriteIndex]);
+      setTempScripts(sprites[selectedSpriteIndex].scripts);
+    }
+  }, [
+    sprites,
+    selectedSpriteIndex,
+    sprites[selectedSpriteIndex],
+    // sprites[selectedSpriteIndex].scripts,
+  ]);
+
+  const [tempScripts, setTempScripts] = useState({});
   return (
     <View style={styles.scriptArea}>
-      {Object.keys(scripts).map((key) => (
-        <View key={key} style={[styles.block, styles[scripts[key].type]]}>
-          <Text style={styles.scriptText}>{scripts[key].label}</Text>
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => onDelete(key)}
+      {sprites &&
+        sprites[selectedSpriteIndex] &&
+        sprites[selectedSpriteIndex].scripts &&
+        Object.keys(sprites[selectedSpriteIndex].scripts).map((key) => (
+          <View
+            key={key}
+            style={[
+              styles.block,
+              styles[sprites[selectedSpriteIndex].scripts[key].type],
+            ]}
           >
-            <Icon name="delete" size={18} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      ))}
+            <Text style={styles.scriptText}>
+              {sprites[selectedSpriteIndex].scripts[key].label}
+            </Text>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => onDelete(key)}
+            >
+              <Icon name="delete" size={18} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        ))}
     </View>
   );
 };
@@ -41,6 +76,10 @@ const styles = StyleSheet.create({
   scriptText: {
     flex: 1,
   },
+  Motion: { backgroundColor: "#4CAF50" },
+  Looks: { backgroundColor: "#2196F3" },
+  Control: { backgroundColor: "#FF9800" },
+  Events: { backgroundColor: "#FFC107" },
   deleteButton: {
     marginLeft: 2,
     padding: 5,
