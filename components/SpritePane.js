@@ -55,13 +55,19 @@ const SpritePane = ({
       style={styles.spriteItem}
     >
       <View style={styles.spriteContent}>
-        <Text>Sprite {item.id}</Text>
+        <Text style={{ fontSize: 15 }}>Sprite {item.id}</Text>
       </View>
       <TouchableOpacity
         onPress={() => removeSprite(item.id)}
         style={styles.removeButton}
       >
-        <Icon name="remove" size={18} color="#fff" />
+        <Icon name="remove" size={15} color="#fff" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.actionIndicator}
+        onPress={() => console.log(`Add actions for sprite ${item.id}`)}
+      >
+        <Text style={styles.actionText}>Add Actions</Text>
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -119,6 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: -10,
   },
   removeButton: {
     position: "absolute",
@@ -138,6 +145,22 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     top: -10,
+  },
+  actionIndicator: {
+    // width: "100%",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#2196F3",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 5,
+  },
+  actionText: {
+    color: "#fff",
+    fontSize: 12,
   },
 });
 

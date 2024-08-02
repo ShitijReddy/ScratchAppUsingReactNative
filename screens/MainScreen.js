@@ -135,7 +135,7 @@ const MainScreen = ({ navigation, route }) => {
           } else if (action.type === "WAIT") {
             setTimeout(() => {
               resolve();
-            }, action.payload.duration || 2000);
+            }, 2000);
           } else if (action.type === "REPEAT") {
             if (repeatCount < 2) {
               // 2 because one time is already executed
@@ -353,7 +353,7 @@ const MainScreen = ({ navigation, route }) => {
         />
         <View>
           <TouchableOpacity style={styles.playButton} onPress={handlePlay}>
-            <Icon name="play-arrow" size={25} color="#fff" />
+            <Icon name="play-arrow" size={30} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
@@ -385,21 +385,23 @@ const styles = StyleSheet.create({
     right: 20,
     backgroundColor: "#2196F3",
     borderRadius: 50,
-    width: 35,
-    height: 35,
+    width: 40,
+    height: 40,
     justifyContent: "center",
     alignItems: "center",
   },
   resetButton: {
+    // marginTop: 25,
     zIndex: 10,
-    marginBottom: -70,
+    // marginBottom: -70,
     position: "absolute",
     bottom: 20,
-    right: 20,
+    right: 15,
     backgroundColor: "#F44336",
     borderRadius: 50,
-    width: 35,
-    height: 35,
+    width: 40,
+    height: 40,
+    marginBottom: -75,
     justifyContent: "center",
     alignItems: "center",
   },
