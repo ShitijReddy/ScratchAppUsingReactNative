@@ -48,7 +48,6 @@ const BlockPalette = ({ onBlockDrop }) => {
       <Block type="Looks" label="Show" onDragEnd={handleDragEnd} />
       <Block type="Control" label="Wait 2 seconds" onDragEnd={handleDragEnd} />
       <Block type="Control" label="Repeat 3 times" onDragEnd={handleDragEnd} />
-      <Block type="Events" label="When Clicked" onDragEnd={handleDragEnd} />
     </ScrollView>
   );
 };
