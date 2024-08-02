@@ -5,7 +5,6 @@ const SpritePositionPanel = ({ position, sprites }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        // alignItems="center"
         justifyContent="space-between"
         style={styles.list}
         horizontal
@@ -30,38 +29,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    // justifyContent: "space-around",
     alignItems: "center",
     padding: 0,
     maxHeight: 60,
     backgroundColor: "#fff",
-    // borderColor: "#ccc",
-    // borderWidth: 3,
     borderRadius: 5,
     marginLeft: 10,
     marginRight: 10,
   },
-  list: {
-    // flex: 1,
-    // display: "flex",
-    // justifyContent: "space-around",
-  },
-  text: {
-    // marginRight: 5,
-    // fontSize: 16,
-  },
-  // container: {
-  //   flex: 1,
-  //   padding: 10,
-  //   backgroundColor: "#e0e0e0",
-  // },
+  list: {},
+  text: {},
   spriteItem: {
     display: "flex",
-    // flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
-    // margin: 5,
     backgroundColor: "#fff",
     borderRadius: 5,
     alignItems: "center",

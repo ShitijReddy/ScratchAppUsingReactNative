@@ -15,20 +15,6 @@ const SpriteEditorScreen = ({ route, navigation }) => {
     spriteIndex,
   } = route.params;
 
-  // const [currentActions, setCurrentActions] = useState([]);
-
-  // useEffect(() => {
-  //   console.log("SpriteEditor:", sprites);
-  //   console.log("Params BEFORE:", route.params);
-  //   console.log("----- Selected Sprite Index:", selectedSpriteIndex);
-  //   console.log("Params AFTER:", route.params);
-  //   // setSelectedSpriteIndex(route.params.)
-  // }, [selectedSpriteIndex, sprites]);
-
-  // useEffect(() => {
-  //   setSelectedSpriteIndex(route.params.spriteIndex);
-  // }, [route.params]);
-
   const handleDeleteScript = (key) => {
     const newSprites = sprites;
 
@@ -46,20 +32,10 @@ const SpriteEditorScreen = ({ route, navigation }) => {
       [`${x}-${y}`]: { type, label },
     };
 
-    // Single
-    // const newScripts = {
-    //   ...selectedSpriteIndex.scripts,
-    //   [`${x}-${y}`]: { type, label },
-    // };
     console.log("New Scripts:", newScripts);
     console.log("********* ind:", selectedSpriteIndex);
     setScripts(newScripts);
 
-    // setSprites((prevSprites) => {
-    //   prevSprites[selectedSpriteIndex].scripts = newScripts;
-    //   console.log("Prev Sprites:", prevSprites);
-    //   return prevSprites;
-    // });
     const prevSprites = sprites;
     prevSprites[spriteIndex].scripts = { ...newScripts };
     console.log("OBJECT IS:", prevSprites[spriteIndex]);

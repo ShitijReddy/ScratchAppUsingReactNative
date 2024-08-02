@@ -14,23 +14,10 @@ const MainScreen = ({ navigation, route }) => {
   const [scripts, setScripts] = useState({});
   const [playOn, setPlayOn] = useState(false);
 
-  // Single
-  // const actionQueue = useRef([]);
-
   const [sprites, setSprites] = useState([
     {
       id: "1",
       position: { x: 0, y: 0 },
-      rotation: 0,
-      isVisible: true,
-      actions: [],
-      scripts: {},
-      showHello: false,
-      showThink: false,
-    },
-    {
-      id: "2",
-      position: { x: 100, y: 100 },
       rotation: 0,
       isVisible: true,
       actions: [],
@@ -56,86 +43,15 @@ const MainScreen = ({ navigation, route }) => {
     }
   }, [selectedSpriteIndex, sprites]);
 
-  // useEffect(() => {
-  //   if (playOn && actionQueue.current.length > 0) {
-  //     processQueue();
-  //   }
-  // }, [playOn]);
-
-  // const processQueue = async () => {
-  //   let repeatStartIndex = -1;
-  //   let repeatCount = 0;
-  //   let maxRepeatCount = 3;
-
-  //   for (let i = 0; i < actionQueue.current.length; i++) {
-  //     const action = actionQueue.current[i];
-  //     await new Promise((resolve) => {
-  //       if (action.type === "MOVE") {
-  //         setSpritePosition((prevPosition) => {
-  //           const newPosition = {
-  //             x: prevPosition.x + action.payload.dx,
-  //             y: prevPosition.y + action.payload.dy,
-  //           };
-  //           setTimeout(() => {
-  //             resolve(newPosition);
-  //           }, 500);
-  //           return newPosition;
-  //         });
-  //       } else if (action.type === "ROTATE") {
-  //         setSpriteRotation((prevRotation) => {
-  //           const newRotation = prevRotation + action.payload.degrees;
-  //           setTimeout(() => {
-  //             resolve(newRotation);
-  //           }, 500);
-  //           return newRotation;
-  //         });
-  //       } else if (action.type === "SAY_HELLO") {
-  //         setShowHello(true);
-  //         resolve();
-  //       } else if (action.type === "SAY_HELLO_TIMER") {
-  //         setShowHello(true);
-  //         setTimeout(() => {
-  //           setShowHello(false);
-  //           resolve();
-  //         }, 2000);
-  //       } else if (action.type === "THINK_HMM_TIMER") {
-  //         setShowThink(true);
-  //         setTimeout(() => {
-  //           setShowThink(false);
-  //           resolve();
-  //         }, 2000);
-  //       } else if (action.type === "THINK_HMM") {
-  //         setShowThink(true);
-  //         resolve();
-  //       } else if (action.type === "HIDE") {
-  //         setHide(true);
-  //         resolve();
-  //       } else if (action.type === "SHOW") {
-  //         setHide(false);
-  //         resolve();
-  //       } else if (action.type === "WAIT") {
-  //         setTimeout(() => {
-  //           resolve();
-  //         }, 2000);
-  //       } else if (action.type === "REPEAT") {
-  //         repeatCount++;
-
-  //         if (repeatCount < maxRepeatCount) {
-  //           console.log("repeatCount:", repeatCount);
-  //           console.log("repeatStartInd:", repeatStartIndex);
-  //           console.log("ACTION QUE--", actionQueue);
-  //           i = -1;
-  //           console.log("i:", i);
-  //           resolve();
-  //         } else {
-  //           resolve();
-  //         }
-  //       }
-  //     });
-  //   }
-  //   actionQueue.current = [];
-  //   setPlayOn(false);
-  // };
+  useEffect(() => {
+    const newActionQueues = sprites.map(() => []);
+    actionQueues.forEach((queue, index) => {
+      if (index < newActionQueues.length) {
+        newActionQueues[index] = queue;
+      }
+    });
+    actionQueues.splice(0, actionQueues.length, ...newActionQueues);
+  }, [sprites]);
 
   useEffect(() => {
     if (playOn) {
@@ -144,8 +60,10 @@ const MainScreen = ({ navigation, route }) => {
   }, [playOn]);
 
   const processQueue = async () => {
-    // Array of promises for each sprite's actions
     const promises = actionQueues.map(async (queue, index) => {
+      let repeatCount = 0;
+      let repeatStartIndex = -1;
+
       for (let i = 0; i < queue.length; i++) {
         const action = queue[i];
         await new Promise((resolve) => {
@@ -217,29 +135,33 @@ const MainScreen = ({ navigation, route }) => {
           } else if (action.type === "WAIT") {
             setTimeout(() => {
               resolve();
-            }, 2000);
+            }, action.payload.duration || 2000);
           } else if (action.type === "REPEAT") {
-            repeatCount++;
+            if (repeatCount < 2) {
+              // 2 because one time is already executed
+              if (repeatStartIndex === -1) {
+                repeatStartIndex = 0;
+              }
+              repeatCount++;
+              i = repeatStartIndex - 1;
 
-            if (repeatCount < maxRepeatCount) {
-              console.log("repeatCount:", repeatCount);
-              console.log("repeatStartInd:", repeatStartIndex);
-              console.log("ACTION QUE--", actionQueue);
-              i = -1;
-              console.log("i:", i);
               resolve();
             } else {
+              repeatCount = 0;
+              repeatStartIndex = -1;
               resolve();
             }
+          }
+
+          if (repeatStartIndex === -1 && action.type !== "REPEAT") {
+            repeatStartIndex = i;
           }
         });
       }
     });
 
-    // Wait for all action queues to complete
     await Promise.all(promises);
 
-    // Reset the action queues and stop playing
     actionQueues.forEach((queue) => (queue.length = 0));
     setPlayOn(false);
   };
@@ -286,11 +208,8 @@ const MainScreen = ({ navigation, route }) => {
   };
 
   const handlePlay = () => {
-    // Single
-    // actionQueue.current = [];
-
     actionQueues.forEach((queue, index) => {
-      queue.length = 0; // Clear the previous actions
+      queue.length = 0;
     });
 
     Object.values(sprites).forEach((sprite, index) => {
@@ -380,119 +299,8 @@ const MainScreen = ({ navigation, route }) => {
       });
     });
 
-    // Single
-    // console.log("scripts:", scripts);
-    // Object.values(scripts).forEach((script) => {
-    //   if (script.type === "Motion" && script.label === "Move 30 steps") {
-    //     actionQueue.current.push({
-    //       type: "MOVE",
-    //       payload: { dx: 30, dy: 0 },
-    //     });
-    //   }
-    //   if (script.type === "Motion" && script.label === "Change X by 30") {
-    //     actionQueue.current.push({
-    //       type: "MOVE",
-    //       payload: { dx: 30, dy: 0 },
-    //     });
-    //   }
-    //   if (script.type === "Motion" && script.label === "Change Y by 30") {
-    //     actionQueue.current.push({
-    //       type: "MOVE",
-    //       payload: { dx: 0, dy: -30 },
-    //     });
-    //   }
-    //   if (script.type === "Motion" && script.label === "Rotate by +15 deg") {
-    //     actionQueue.current.push({
-    //       type: "ROTATE",
-    //       payload: { degrees: 15 },
-    //     });
-    //   }
-    //   if (script.type === "Motion" && script.label === "Rotate by -15 deg") {
-    //     actionQueue.current.push({
-    //       type: "ROTATE",
-    //       payload: { degrees: -15 },
-    //     });
-    //   }
-    //   if (script.type === "Motion" && script.label === "Rotate by +45 deg") {
-    //     actionQueue.current.push({
-    //       type: "ROTATE",
-    //       payload: { degrees: 45 },
-    //     });
-    //   }
-    //   if (script.type === "Motion" && script.label === "Rotate by -45 deg") {
-    //     actionQueue.current.push({
-    //       type: "ROTATE",
-    //       payload: { degrees: -45 },
-    //     });
-    //   }
-    //   if (script.type === "Looks" && script.label === "Say Hello") {
-    //     actionQueue.current.push({
-    //       type: "SAY_HELLO",
-    //     });
-    //   }
-    //   if (script.type === "Looks" && script.label === "Say Hello for 2 Sec") {
-    //     actionQueue.current.push({
-    //       type: "SAY_HELLO_TIMER",
-    //     });
-    //   }
-    //   if (script.type === "Looks" && script.label === "Think Hmm") {
-    //     actionQueue.current.push({
-    //       type: "THINK_HMM",
-    //     });
-    //   }
-    //   if (script.type === "Looks" && script.label === "Think Hmm for 2 Sec") {
-    //     actionQueue.current.push({
-    //       type: "THINK_HMM_TIMER",
-    //     });
-    //   }
-    //   if (script.type === "Looks" && script.label === "Hide") {
-    //     actionQueue.current.push({
-    //       type: "HIDE",
-    //     });
-    //   }
-    //   if (script.type === "Looks" && script.label === "Show") {
-    //     actionQueue.current.push({
-    //       type: "SHOW",
-    //     });
-    //   }
-    //   if (script.type === "Control" && script.label === "Wait 2 seconds") {
-    //     actionQueue.current.push({
-    //       type: "WAIT",
-    //     });
-    //   }
-    //   if (script.type === "Control" && script.label === "Repeat 3 times") {
-    //     actionQueue.current.push({
-    //       type: "REPEAT",
-    //     });
-    //   }
-    // });
     setPlayOn(true);
   };
-
-  // const handlePlay = () => {
-  //   sprites.forEach((sprite, index) => {
-  //     sprite.actions.forEach((action) => {
-  //       if (action.type === "MOVE") {
-  //         Animated.timing(panRefs[index], {
-  //           toValue: {
-  //             x: sprite.position.x + action.payload.dx,
-  //             y: sprite.position.y + action.payload.dy,
-  //           },
-  //           duration: 500,
-  //           useNativeDriver: false,
-  //         }).start();
-  //       }
-  //       if (action.type === "ROTATE") {
-  //         Animated.timing(rotationRefs[index], {
-  //           toValue: sprite.rotation + action.payload.degrees,
-  //           duration: 500,
-  //           useNativeDriver: false,
-  //         }).start();
-  //       }
-  //       // Handle other actions like visibility, text display, etc.
-  //     });
-  //   });
-  // };
 
   useEffect(() => {
     console.log("Screen Rendering...");
@@ -502,15 +310,7 @@ const MainScreen = ({ navigation, route }) => {
 
   const handleReset = () => {
     setPlayOn(false);
-    // actionQueue.current = [];
     console.log("Sprites:", sprites);
-    // setSprites((prevSprites) => {
-    //   prevSprites.map((item) => {
-    //     item.position = { x: 0, y: 0 };
-    //     item.actions = [];
-    //   });
-    //   return prevSprites;
-    // });
 
     setSprites((prevSprites) =>
       prevSprites.map((item) => ({

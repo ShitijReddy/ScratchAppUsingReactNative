@@ -19,12 +19,7 @@ const ScriptArea = ({
       console.log("WWW", sprites[selectedSpriteIndex]);
       setTempScripts(sprites[selectedSpriteIndex].scripts);
     }
-  }, [
-    sprites,
-    selectedSpriteIndex,
-    sprites[selectedSpriteIndex],
-    // sprites[selectedSpriteIndex].scripts,
-  ]);
+  }, [sprites, selectedSpriteIndex, sprites[selectedSpriteIndex]]);
 
   const [tempScripts, setTempScripts] = useState({});
   return (

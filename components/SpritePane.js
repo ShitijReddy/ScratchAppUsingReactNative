@@ -33,41 +33,18 @@ const SpritePane = ({
       showHello: false,
       showThink: false,
     };
-    // setSprites([...sprites, newSprite]);
     setSprites((prevSprites) => {
       const updatedSprites = [...prevSprites, newSprite];
       console.log("updatedSprites ", updatedSprites);
       return updatedSprites;
-      // return
-      // updatedSprites[index].position = {
-      //   x: panRefs[index].x._value,
-      //   y: panRefs[index].y._value,
-      // };
     });
-    // setParams()
     console.log("sprites in pane:", sprites);
-    // setSprites((prevSprites) => {
-    //   const newSprites = [...prevSprites];
-    //   newSprites[index].rotation += action.payload.degrees;
-    //   setTimeout(() => resolve(), 500);
-    //   return newSprites;
-    // });
-    // setSprites((prevSprites) => {
-    //   const newSprites = [
-    //     ...prevSprites,
-    //     {
-    //       id: newId,
-    //       position: { x: 0, y: 0 },
-    //       rotation: 0,
-    //       isVisible: true,
-    //       actions: [],
-    //       scripts: {},
-    //       showHello: false,
-    //       showThink: false,
-    //     },
-    //   ];
-    //   return newSprites;
-    // });
+  };
+
+  const removeSprite = (id) => {
+    setSprites((prevSprites) =>
+      prevSprites.filter((sprite) => sprite.id !== id)
+    );
   };
 
   const renderSpriteItem = ({ item, index }) => (
@@ -77,7 +54,15 @@ const SpritePane = ({
       }}
       style={styles.spriteItem}
     >
-      <Text>Sprite {item.id}</Text>
+      <View style={styles.spriteContent}>
+        <Text>Sprite {item.id}</Text>
+      </View>
+      <TouchableOpacity
+        onPress={() => removeSprite(item.id)}
+        style={styles.removeButton}
+      >
+        <Icon name="remove" size={18} color="#fff" />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 
@@ -104,7 +89,6 @@ const SpritePane = ({
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -116,12 +100,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   spriteItem: {
+    position: "relative",
     padding: 10,
     backgroundColor: "#fff",
     borderRadius: 5,
     marginRight: 10,
-    alignItems: "center",
-    justifyContent: "center",
     width: 100,
     height: 100,
     shadowColor: "#000",
@@ -129,29 +112,33 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  spriteContent: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  removeButton: {
+    position: "absolute",
+    top: 0,
+    right: 2,
+    backgroundColor: "#f00",
+    padding: 5,
+    borderRadius: 50,
   },
   addItem: {
     padding: 10,
     marginTop: 10,
-    padding: 10,
     backgroundColor: "#2196F3",
-    // backgroundColor: "#fff",
     borderRadius: 5,
-    marginRight: 10,
     alignItems: "center",
     justifyContent: "center",
     width: 100,
     height: 100,
     top: -10,
-
-    // marginRight: 10,
-    // borderRadius: 5,
-    // alignItems: "center",
-    // justifyContent: "center",
-    // width: 100,
-    // height: 100,
   },
-  blueColor: {},
 });
 
 export default React.memo(SpritePane);
