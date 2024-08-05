@@ -198,11 +198,11 @@ const Stage = ({
                 styles.messageContainer,
                 {
                   borderWidth: 1,
-                  marginTop: -30,
+                  marginLeft: 28 + sprites[index].sizeChange,
                 },
               ]}
             >
-              <Text style={styles.messageText}>Hello!</Text>
+              <Text style={styles.messageText}>{sprites[index].message}</Text>
             </View>
           )}
           {sprites[index].showThink && (
@@ -234,15 +234,15 @@ const Stage = ({
           <SvgXml
             xml={CatIcon}
             preserveAspectRatio="xMinYMin slice"
-            width={58}
-            height={62}
+            width={58 + sprites[index].sizeChange}
+            height={64 + sprites[index].sizeChange}
           />
           <Text
             style={{
-              right: -10,
+              right: -5,
             }}
           >
-            {index + 1}
+            Sprite {index + 1}
           </Text>
         </Animated.View>
       ))}
@@ -268,19 +268,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
     backgroundColor: "white",
-    marginLeft: 45,
+    // marginLeft: 45,
     padding: 2,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: "black",
     zIndex: 99,
-    width: 70,
+    minWidth: 70,
+    top: -38,
   },
   messageText: {
     backgroundColor: "white",
     padding: 5,
-    borderRadius: 5,
-    fontSize: 16,
     color: "black",
   },
   cloud: {

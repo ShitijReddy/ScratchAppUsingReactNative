@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import BlockPalette from "../components/BlockPalette";
 import ScriptArea from "../components/ScriptArea";
@@ -14,6 +14,12 @@ const SpriteEditorScreen = ({ route, navigation }) => {
     setSelectedSpriteIndex,
     spriteIndex,
   } = route.params;
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: `Add Actions for Sprite ${spriteIndex + 1}`,
+    });
+  }, [navigation, selectedSpriteIndex]);
 
   const handleDeleteScript = (key) => {
     const newSprites = sprites;
@@ -60,7 +66,8 @@ const SpriteEditorScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
+
     flexDirection: "row",
   },
 });

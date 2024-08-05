@@ -24,6 +24,9 @@ const MainScreen = ({ navigation, route }) => {
       scripts: {},
       showHello: false,
       showThink: false,
+      message: "Hello",
+      thought: "Hmm...",
+      sizeChange: 0,
     },
   ]);
   const actionQueues = useRef(sprites.map(() => [])).current;
@@ -87,13 +90,22 @@ const MainScreen = ({ navigation, route }) => {
           } else if (action.type === "SAY_HELLO") {
             setSprites((prevSprites) => {
               const newSprites = [...prevSprites];
+              newSprites[index].message = action.payload.message;
               newSprites[index].showHello = true;
               return newSprites;
             });
             resolve();
+          } else if (action.type === "INC_SIZE") {
+            setSprites((prevSprites) => {
+              const newSprites = [...prevSprites];
+              newSprites[index].sizeChange += action.payload.value;
+              setTimeout(() => resolve(), 500);
+              return newSprites;
+            });
           } else if (action.type === "SAY_HELLO_TIMER") {
             setSprites((prevSprites) => {
               const newSprites = [...prevSprites];
+              newSprites[index].message = action.payload.message;
               newSprites[index].showHello = true;
               setTimeout(() => {
                 newSprites[index].showHello = false;
@@ -122,9 +134,13 @@ const MainScreen = ({ navigation, route }) => {
             setSprites((prevSprites) => {
               const newSprites = [...prevSprites];
               newSprites[index].isVisible = false;
+              setTimeout(() => {
+                newSprites[index].isVisible = true;
+                resolve();
+              }, action.payload.time * 1000);
+
               return newSprites;
             });
-            resolve();
           } else if (action.type === "SHOW") {
             setSprites((prevSprites) => {
               const newSprites = [...prevSprites];
@@ -135,10 +151,10 @@ const MainScreen = ({ navigation, route }) => {
           } else if (action.type === "WAIT") {
             setTimeout(() => {
               resolve();
-            }, 2000);
+            }, action.payload.time * 1000);
           } else if (action.type === "REPEAT") {
-            if (repeatCount < 2) {
-              // 2 because one time is already executed
+            if (repeatCount < action.payload.repetitions - 1) {
+              // doing -1 because one time is already executed
               if (repeatStartIndex === -1) {
                 repeatStartIndex = 0;
               }
@@ -207,6 +223,27 @@ const MainScreen = ({ navigation, route }) => {
     });
   };
 
+  const parseCustomValue = (label, type) => {
+    if (type === "Motion" || type === "Control") {
+      const matches = label.toString().match(/-?\d+(\.\d+)?/);
+      return matches ? parseFloat(matches[0]) : 0;
+    } else if (type === "Looks") {
+      let keyword = "Say";
+      if (label.includes("Say")) {
+        keyword = "Say";
+      } else if (label.includes("Think")) {
+        keyword = "Think";
+      } else {
+        const matches = label.toString().match(/-?\d+(\.\d+)?/);
+        return matches ? parseFloat(matches[0]) : 0;
+      }
+      const index = label.indexOf(keyword);
+      return label.substring(index + keyword.length).trim();
+    } else {
+      return label;
+    }
+  };
+
   const handlePlay = () => {
     actionQueues.forEach((queue, index) => {
       queue.length = 0;
@@ -214,86 +251,109 @@ const MainScreen = ({ navigation, route }) => {
 
     Object.values(sprites).forEach((sprite, index) => {
       Object.values(sprite.scripts).forEach((script) => {
-        if (script.type === "Motion" && script.label == "Move 30 steps") {
+        const customValue = parseCustomValue(script.label, script.type);
+        console.log("Script.Label:", script.label);
+        console.log("Custom Value:", customValue);
+
+        if (
+          script.type === "Motion" &&
+          script.label.includes("Move") &&
+          !script.label.includes("Move Y")
+        ) {
           actionQueues[index].push({
             type: "MOVE",
-            payload: { dx: +30, dy: 0 },
+            payload: { dx: customValue, dy: 0 },
           });
-        }
-        if (script.type === "Motion" && script.label == "Change X by 30") {
+        } else if (
+          script.type === "Motion" &&
+          script.label.includes("Move X by")
+        ) {
           actionQueues[index].push({
             type: "MOVE",
-            payload: { dx: 30, dy: 0 },
+            payload: { dx: customValue, dy: 0 },
           });
-        }
-        if (script.type === "Motion" && script.label === "Change Y by 30") {
+        } else if (
+          script.type === "Motion" &&
+          script.label.includes("Move Y by")
+        ) {
           actionQueues[index].push({
             type: "MOVE",
-            payload: { dx: 0, dy: -30 },
+            payload: { dx: 0, dy: -customValue },
           });
-        }
-        if (script.type === "Motion" && script.label === "Rotate by +15 deg") {
+        } else if (
+          script.type === "Motion" &&
+          script.label.includes("Rotate by")
+        ) {
           actionQueues[index].push({
             type: "ROTATE",
-            payload: { degrees: 15 },
+            payload: { degrees: customValue },
           });
         }
-        if (script.type === "Motion" && script.label === "Rotate by -15 deg") {
+        // if (script.type === "Motion" && script.label === "Rotate by -45 deg") {
+        //   actionQueues[index].push({
+        //     type: "ROTATE",
+        //     payload: { degrees: -45 },
+        //   });
+        // }
+        else if (script.type === "Looks" && script.label.includes("Inc Size")) {
           actionQueues[index].push({
-            type: "ROTATE",
-            payload: { degrees: -15 },
+            type: "INC_SIZE",
+            payload: { value: customValue },
           });
-        }
-        if (script.type === "Motion" && script.label === "Rotate by +45 deg") {
+        } else if (
+          script.type === "Looks" &&
+          script.label.includes("Dec Size")
+        ) {
           actionQueues[index].push({
-            type: "ROTATE",
-            payload: { degrees: 45 },
+            type: "DEC_SIZE",
+            payload: { value: customValue },
           });
-        }
-        if (script.type === "Motion" && script.label === "Rotate by -45 deg") {
-          actionQueues[index].push({
-            type: "ROTATE",
-            payload: { degrees: -45 },
-          });
-        }
-        if (script.type === "Looks" && script.label === "Say Hello") {
-          actionQueues[index].push({
-            type: "SAY_HELLO",
-          });
-        }
-        if (script.type === "Looks" && script.label === "Say Hello for 2 Sec") {
+        } else if (
+          script.type === "Looks" &&
+          script.label.includes("For 2s, Say")
+        ) {
           actionQueues[index].push({
             type: "SAY_HELLO_TIMER",
+            payload: { message: customValue },
           });
-        }
-        if (script.type === "Looks" && script.label === "Think Hmm") {
+        } else if (script.type === "Looks" && script.label.includes("Say")) {
           actionQueues[index].push({
-            type: "THINK_HMM",
+            type: "SAY_HELLO",
+            payload: { message: customValue },
           });
-        }
-        if (script.type === "Looks" && script.label === "Think Hmm for 2 Sec") {
+        } else if (
+          script.type === "Looks" &&
+          script.label.includes("For 2s, Think")
+        ) {
           actionQueues[index].push({
             type: "THINK_HMM_TIMER",
           });
-        }
-        if (script.type === "Looks" && script.label === "Hide") {
+        } else if (script.type === "Looks" && script.label.includes("Think")) {
+          actionQueues[index].push({
+            type: "THINK_HMM",
+          });
+        } else if (script.type === "Looks" && script.label.includes("Hide")) {
           actionQueues[index].push({
             type: "HIDE",
+            payload: { time: customValue },
           });
-        }
-        if (script.type === "Looks" && script.label === "Show") {
+        } else if (script.type === "Looks" && script.label === "Show") {
           actionQueues[index].push({
             type: "SHOW",
           });
-        }
-        if (script.type === "Control" && script.label === "Wait 2 seconds") {
+        } else if (script.type === "Control" && script.label.includes("Wait")) {
           actionQueues[index].push({
             type: "WAIT",
+            payload: { time: customValue },
           });
-        }
-        if (script.type === "Control" && script.label === "Repeat 3 times") {
+        } else if (
+          script.type === "Control" &&
+          script.label.includes("Repeat")
+        ) {
+          console.log("REPETITIONS:", customValue);
           actionQueues[index].push({
             type: "REPEAT",
+            payload: { repetitions: customValue },
           });
         }
       });
@@ -320,6 +380,9 @@ const MainScreen = ({ navigation, route }) => {
         showThink: false,
         rotation: 0,
         actions: [],
+        message: "Hello",
+        thought: "Hmm...",
+        sizeChange: 0,
       }))
     );
     console.log("Sprites:", sprites);
@@ -391,9 +454,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   resetButton: {
-    // marginTop: 25,
     zIndex: 10,
-    // marginBottom: -70,
     position: "absolute",
     bottom: 20,
     right: 15,

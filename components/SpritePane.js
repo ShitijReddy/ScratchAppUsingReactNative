@@ -32,6 +32,9 @@ const SpritePane = ({
       scripts: {},
       showHello: false,
       showThink: false,
+      message: "Hello",
+      thought: "Hmm...",
+      sizeChange: 0,
     };
     setSprites((prevSprites) => {
       const updatedSprites = [...prevSprites, newSprite];
@@ -63,12 +66,9 @@ const SpritePane = ({
       >
         <Icon name="remove" size={15} color="#fff" />
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.actionIndicator}
-        onPress={() => console.log(`Add actions for sprite ${item.id}`)}
-      >
+      <View style={styles.actionIndicator}>
         <Text style={styles.actionText}>Add Actions</Text>
-      </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
 
@@ -147,13 +147,12 @@ const styles = StyleSheet.create({
     top: -10,
   },
   actionIndicator: {
-    // width: "100%",
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     backgroundColor: "#2196F3",
-    borderRadius: 5,
+    borderRadius: 2,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 5,
