@@ -87,12 +87,12 @@ const BlockPalette = ({ onBlockDrop }) => {
         initialValue={5}
         onDragEnd={handleDragEnd}
       />
-      <Block
+      {/* <Block
         type="Looks"
         label="Show"
         initialValue={""}
         onDragEnd={handleDragEnd}
-      />
+      /> */}
       <Block
         type="Control"
         label="Wait"
